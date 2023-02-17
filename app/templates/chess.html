@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/center_text.css">
+  </head>
+  <body>
+    <div class="center-text" id="hit_me">
+      {{position}}
+    </div>
+        <br><br>
+      <input type="text" id="chess_box" size="25" placeholder="put move here">
+        <br><br>
+      <button id="button1">Button 1</button>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $("#button1").click(function() {
+      $.ajax({
+        type: "POST",
+        url: "/update_center_text",
+        data: { text: "Button 1 pressed" },
+        success: function(response) {
+          $("#center_text").text(response);
+          $("#hit_me").html(response)
+        }
+      });
+    });
+    $("#chess_box").blur(function() {
+      $.ajax({
+        type: "POST",
+        url: "/update_board",
+        data: { text: $("#chess_box").val() },
+        success: function(response) {
+          $("#board_box").text(response);
+        }
+      });
+    });
+  </script>
+    <p id="board_box" ></p>
+  </body>
+</html>
+
+
