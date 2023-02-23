@@ -1,14 +1,16 @@
 from flask import render_template, request
 from app import app
-from chess_pieces import base_piece as bp
+import chess
+import textwrap
+import html
 
-piece1 = bp.ChessPiece([0, 0], "white")
+board = chess.Board()
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('chess.html', position=piece1.position)
+    return render_template('chess.html')
 
 
 @app.route("/update_center_text", methods=["POST"])
@@ -19,9 +21,23 @@ def update_center_text():
 
     return new_text
 
+
 @app.route("/update_board", methods=["POST"])
 def update_board():
-    new_text = request.form.get("text")
-    print(new_text)
-    return new_text
+    chess_move_text = request.form.get("text")
 
+    move = chess.Move.from_uci(str(chess_move_text))
+
+    if move in board.legal_moves:
+        board.push(chess.Move.from_uci(str(chess_move_text)))
+    else:
+        "ERROR"
+
+    print(chess_move_text)
+    print(board.unicode)
+
+    wrapped_board = "\n".join(textwrap.wrap(str(board), width=16))
+
+    # return html.unescape("&#9818;")
+    # return wrapped_board
+    return board.unicode()

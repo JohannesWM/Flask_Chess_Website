@@ -4,9 +4,10 @@
     <link rel="stylesheet" type="text/css" href="/static/css/center_text.css">
   </head>
   <body>
-    <div class="center-text" id="hit_me">
-      {{position}}
-    </div>
+<!--    <div class="center-text" id="hit_me">-->
+<!--      {{position}}-->
+<!--    </div>-->
+  <pre class="center-text" id="hit_me"></pre>
         <br><br>
       <input type="text" id="chess_box" size="25" placeholder="put move here">
         <br><br>
@@ -30,7 +31,7 @@
         url: "/update_board",
         data: { text: $("#chess_box").val() },
         success: function(response) {
-          $("#board_box").text(response);
+          $("#hit_me").text(response);
         }
       });
     });
