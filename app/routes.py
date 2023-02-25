@@ -10,7 +10,7 @@ board = chess.Board()
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('chess.html')
+    return render_template('dragChess_Feb_24.html')
 
 
 @app.route("/update_center_text", methods=["POST"])
@@ -34,7 +34,7 @@ def update_board():
         "ERROR"
 
     print(chess_move_text)
-    print(board.unicode)
+    print(board)
 
     wrapped_board = "\n".join(textwrap.wrap(str(board), width=16))
 
