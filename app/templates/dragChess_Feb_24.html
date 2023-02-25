@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<title>Drag</title>
+
+<meta charset="UTF-8">
+<meta name="author" content="Barbara Napholtz">
+
+<style>
+body {margin:50px;max-width:600px;}
+#board {font-size:400%; line-height:0.8; margin-top:100px;border:25px outset Black;width:400px;height:400px;}
+.space {display:inline-block;}
+.piece {display:inline-block;}
+.space, .piece {width:50px;height:50px;}
+hr {margin-top:30px;}
+input[type=text] {display:inline-block;width:200px;height:40px;border:2px solid black;text-align:center;font-size:16px;}
+input[type=submit] {display:inline-block;height:40px; width:80px;background:#eee;}
+</style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+var stringToSend = "";
+var pressDown = "";
+var letUp = "";
+var idArray = [];
+function init() {
+
+var unicodeDict = {"r":"&#9814;" , "n":"&#9816;" , "b":"&#9815;" , "q":"&#9813;" , "k":"&#9812;" , "p":"&#9817;" , "R":"&#9820;" , "N":"&#9822;" , "B":"&#9821;" , "Q":"&#9819;" , "K":"&#9818;" , "P":"&#9823;"};
+
+
+var boardString = document.getElementById("silentDiv").innerText;
+var boardStringElements = boardString.split(" ");
+var boardPieces = boardStringElements[0];
+var moveColor = boardStringElements[1];
+var boardRows = boardPieces.split("/");
+var colNames = ["a","b","c","d","e","f","g","h"]
+var col_i = 0;
+var allRCIDs = [];
+for (row in boardRows) { 
+	var rowNum = 8 - row; 
+	var men = boardRows[row].split("");
+	for (thisMan in men ) {
+		if (parseInt(men[thisMan]) > 0) {
+		
+			
+			for (j = 0; j< parseInt(men[thisMan]); j++ ) {
+				var rc_combo = rowNum + col_i;
+				var colorToUse = (rc_combo % 2 == 0 ? "FireBrick" : "BlanchedAlmond");
+				document.getElementById("board").innerHTML += "<div style='background:" + colorToUse + "' draggable='true' ondragstart='drag(event)' ondragend='moveEnded()' ondrop='drop(event)' ondragover='allowDrop(event)' class='space' id='" + colNames[col_i] + rowNum + "'>&nbsp;</div>";
+				
+				allRCIDs.push(colNames[col_i] + rowNum );
+				col_i++; 
+			}
+		
+		} else {
+			var rc_combo = rowNum + col_i;
+			var colorToUse = (rc_combo % 2 == 0 ? "FireBrick" : "BlanchedAlmond");
+			document.getElementById("board").innerHTML += "<div style='background:" + colorToUse + "' draggable='true' ondragstart='drag(event)'  ondragend='moveEnded()' ondrop='drop(event)' ondragover='allowDrop(event)'  class='piece' id='" + colNames[col_i] + rowNum + "'>" + unicodeDict[men[thisMan]] + "</div>";
+			
+			allRCIDs.push(colNames[col_i] + rowNum );
+			col_i++;
+		}
+		
+	}
+	col_i = 0;
+	document.getElementById("board").innerHTML += "<br>";
+
+}
+	
+}
+
+function allowDrop(evt) {
+  evt.preventDefault();
+  drop(evt);
+}
+
+function drag(evt) {
+	window.idArray.push(evt.target.id);
+}
+
+function drop(evt) { 
+	
+	evt.preventDefault();
+	window.idArray.push(evt.target.id);
+}
+
+
+function moveEnded() {
+	if (idArray.length == 0) {
+		document.getElementById("move_data").value = "";
+		return;
+	}
+	window.stringToSend = window.idArray[0] + window.idArray[idArray.length - 1];
+	document.getElementById("move_data").value = stringToSend;
+	
+	document.getElementById(idArray[idArray.length - 1]).innerText = document.getElementById(idArray[0]).innerText;
+	document.getElementById(idArray[0]).innerText = "";
+	idArray.length = 0;
+
+}
+
+function sendData() {
+	if (document.getElementById("move_data").value.length == 0) {
+		console.log("No moves to send!");
+		return;
+	} else {
+	      $.ajax({
+        type: "POST",
+        url: "/update_board",
+        data: { text: $("#move_data").val() },
+        success: function(response) {
+        		console.log("submitting to python snake");
+        }
+      });
+		console.log("submitting to python");
+		document.getElementById("move_data").value = "";
+	}
+	
+}
+
+</script>
+
+</head>
+<body onload="init()">
+
+<input type="text" name="move_data" id="move_data" placeholder="moves will appear here">
+<input type="submit" value="Done" onclick="sendData()">
+
+<div id="board"></div>
+<!--  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 -->
+<div id="silentDiv" style="color:white">rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1</div>
+<!-- 4k2r/6r1/8/8/8/8/3R4/R3K3 w Qk - 0 1-->
+</body>
+</html>
