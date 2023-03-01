@@ -113,6 +113,7 @@ function sendData() {
         data: { text: $("#move_data").val() },
         success: function(response) {
         		console.log("submitting to python snake");
+        		 $("#silentDiv").html(response)
         }
       });
 		console.log("submitting to python");
@@ -131,7 +132,8 @@ function sendData() {
 
 <div id="board"></div>
 <!--  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 -->
-<div id="silentDiv" style="color:white">rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1</div>
+<!--<div id="silentDiv" style="color:white">rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1</div>-->
+<div id="silentDiv" style="color:white">{{fen_string}}</div>
 <!-- 4k2r/6r1/8/8/8/8/3R4/R3K3 w Qk - 0 1-->
 </body>
 </html>

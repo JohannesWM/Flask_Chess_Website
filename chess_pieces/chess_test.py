@@ -18,5 +18,5 @@ board.push(move)  # play a move (transforms the state of the baord)
 # board.piece_type_at(square)  # returns the suqr's corresponding chess piece
 print(board.turn)  # returns a chess color object
 
-board
+print(board.fen())
 print(board)

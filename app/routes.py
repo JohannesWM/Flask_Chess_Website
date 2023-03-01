@@ -10,7 +10,7 @@ board = chess.Board()
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('dragChess_Feb_24.html')
+    return render_template('dragChess_Feb_24.html', fen_string=board.fen())
 
 
 @app.route("/update_center_text", methods=["POST"])
@@ -40,4 +40,4 @@ def update_board():
 
     # return html.unescape("&#9818;")
     # return wrapped_board
-    return board.unicode()
+    return board.fen()
