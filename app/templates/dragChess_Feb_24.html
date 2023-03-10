@@ -28,7 +28,7 @@ var pressDown = "";
 var letUp = "";
 var idArray = [];
 function init() {
-
+document.getElementById("board").innerHTML = ""
 var unicodeDict = {"r":"&#9814;" , "n":"&#9816;" , "b":"&#9815;" , "q":"&#9813;" , "k":"&#9812;" , "p":"&#9817;" , "R":"&#9820;" , "N":"&#9822;" , "B":"&#9821;" , "Q":"&#9819;" , "K":"&#9818;" , "P":"&#9823;"};
 
 
@@ -49,7 +49,7 @@ for (row in boardRows) {
 			
 			for (j = 0; j< parseInt(men[thisMan]); j++ ) {
 				var rc_combo = rowNum + col_i;
-				var colorToUse = (rc_combo % 2 == 0 ? "FireBrick" : "BlanchedAlmond");
+				var colorToUse = (rc_combo % 2 == 0 ? "BlanchedAlmond" : "FireBrick");
 				document.getElementById("board").innerHTML += "<div style='background:" + colorToUse + "' draggable='true' ondragstart='drag(event)' ondragend='moveEnded()' ondrop='drop(event)' ondragover='allowDrop(event)' class='space' id='" + colNames[col_i] + rowNum + "'>&nbsp;</div>";
 				
 				allRCIDs.push(colNames[col_i] + rowNum );
@@ -58,7 +58,7 @@ for (row in boardRows) {
 		
 		} else {
 			var rc_combo = rowNum + col_i;
-			var colorToUse = (rc_combo % 2 == 0 ? "FireBrick" : "BlanchedAlmond");
+			var colorToUse = (rc_combo % 2 == 0 ? "BlanchedAlmond" : "FireBrick");
 			document.getElementById("board").innerHTML += "<div style='background:" + colorToUse + "' draggable='true' ondragstart='drag(event)'  ondragend='moveEnded()' ondrop='drop(event)' ondragover='allowDrop(event)'  class='piece' id='" + colNames[col_i] + rowNum + "'>" + unicodeDict[men[thisMan]] + "</div>";
 			
 			allRCIDs.push(colNames[col_i] + rowNum );
@@ -96,7 +96,7 @@ function moveEnded() {
 	}
 	window.stringToSend = window.idArray[0] + window.idArray[idArray.length - 1];
 	document.getElementById("move_data").value = stringToSend;
-	
+	sendData();
 	document.getElementById(idArray[idArray.length - 1]).innerText = document.getElementById(idArray[0]).innerText;
 	document.getElementById(idArray[0]).innerText = "";
 	idArray.length = 0;
@@ -115,6 +115,7 @@ function sendData() {
         success: function(response) {
         		console.log("submitting to python snake");
         		 $("#silentDiv").html(response)
+        		 init();
         }
       });
 		console.log("submitting to python");
